@@ -13,6 +13,8 @@
  *            LICENSE
  */
 #include "mapview.h"
+
+#include <cstdio>
 #include <stdint.h>
 
 #ifndef ARRAY_SIZE
@@ -45,10 +47,20 @@ MapViewOfFileClass::MapViewOfFileClass(const wchar_t *fileName) :
                     if (m_ntHeader->Signature == IMAGE_NT_SIGNATURE) {
                         m_optionalHeader = (PIMAGE_OPTIONAL_HEADER)&m_ntHeader->OptionalHeader;
                         m_sectionHeaders = IMAGE_FIRST_SECTION(m_ntHeader);
+                    } else {
+                        MessageBoxA(nullptr, "Signature failed", "Proxy", MB_ICONINFORMATION);
                     }
+                } else {
+                    MessageBoxA(nullptr, "e_magic failed", "Proxy", MB_ICONINFORMATION);
                 }
+            } else {
+                MessageBoxA(nullptr, "m_lpFileBase failed", "Proxy", MB_ICONINFORMATION);
             }
+        } else {
+            MessageBoxA(nullptr, "m_hFileMapping failed", "Proxy", MB_ICONINFORMATION);
         }
+    } else {
+        MessageBoxA(nullptr, "m_hFile failed", "Proxy", MB_ICONINFORMATION);
     }
 }
 
@@ -65,7 +77,7 @@ MapViewOfFileClass::~MapViewOfFileClass()
 bool GetModuleSectionInfo(ImageSectionInfo &info)
 {
     wchar_t fileName[MAX_PATH] = {0};
-
+    char aaa[867];
     if (GetModuleFileNameW(NULL, fileName, ARRAY_SIZE(fileName)) != 0) {
         MapViewOfFileClass mapView(fileName);
         PIMAGE_OPTIONAL_HEADER optionalHeader = mapView.GetOptionalHeader();
@@ -75,9 +87,56 @@ bool GetModuleSectionInfo(ImageSectionInfo &info)
             info.BaseOfData = LPVOID(optionalHeader->BaseOfData);
             info.SizeOfCode = SIZE_T(optionalHeader->SizeOfCode);
             info.SizeOfData = SIZE_T(optionalHeader->SizeOfInitializedData + optionalHeader->SizeOfUninitializedData);
-
+            sprintf(aaa,
+                "ImageBase %x\n"
+                "SectionAlignment %x\n"
+                "FileAlignment %x\n"
+                "MajorOperatingSystemVersion %x\n"
+                "MinorOperatingSystemVersion %x\n"
+                "MajorImageVersion %x\n"
+                "MinorImageVersion %x\n"
+                "MajorSubsystemVersion %x\n"
+                "MinorSubsystemVersion %x\n"
+                "Win32VersionValue %x\n"
+                "SizeOfImage %x\n"
+                "SizeOfHeaders %x\n"
+                "CheckSum %x\n"
+                "Subsystem %x\n"
+                "DllCharacteristics %x\n"
+                "SizeOfStackReserve %x\n"
+                "SizeOfStackCommit %x\n"
+                "SizeOfHeapReserve %x\n"
+                "SizeOfHeapCommit %x\n"
+                "LoaderFlags %x\n"
+                "NumberOfRvaAndSizes %x\n",
+                optionalHeader->ImageBase,
+                optionalHeader->SectionAlignment,
+                optionalHeader->FileAlignment,
+                optionalHeader->MajorOperatingSystemVersion,
+                optionalHeader->MinorOperatingSystemVersion,
+                optionalHeader->MajorImageVersion,
+                optionalHeader->MinorImageVersion,
+                optionalHeader->MajorSubsystemVersion,
+                optionalHeader->MinorSubsystemVersion,
+                optionalHeader->Win32VersionValue,
+                optionalHeader->SizeOfImage,
+                optionalHeader->SizeOfHeaders,
+                optionalHeader->CheckSum,
+                optionalHeader->Subsystem,
+                optionalHeader->DllCharacteristics,
+                optionalHeader->SizeOfStackReserve,
+                optionalHeader->SizeOfStackCommit,
+                optionalHeader->SizeOfHeapReserve,
+                optionalHeader->SizeOfHeapCommit,
+                optionalHeader->LoaderFlags,
+                optionalHeader->NumberOfRvaAndSizes);
+            MessageBoxA(nullptr, aaa, "Proxy", MB_ICONINFORMATION);
             return true;
+        } else {
+            MessageBoxA(nullptr, "optionalHeader failed", "Proxy", MB_ICONINFORMATION);
         }
+    } else {
+        MessageBoxA(nullptr, "GetModuleFileNameW failed", "Proxy", MB_ICONINFORMATION);
     }
     return false;
 }

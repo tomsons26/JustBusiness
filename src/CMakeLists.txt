@@ -33,6 +33,7 @@ set(BUSINESS_SRC
     debt.h
     debug.cpp
     debug.h
+    defines.h
     dib.cpp
     dib.h
     dice.cpp
@@ -41,6 +42,7 @@ set(BUSINESS_SRC
     drawcard.h
     exprent.cpp
     exprent.h
+    file/_file.h
     file/file.cpp
     file/file.h
     file/filecach.cpp
@@ -55,6 +57,7 @@ set(BUSINESS_SRC
     file/fileio.h
     file/filelib.cpp
     file/filelib.h
+    file/filetemp.h
     file/findfile.cpp
     file/findfile.h
     freepark.cpp
@@ -98,9 +101,10 @@ set(BUSINESS_SRC
     mem/alloc.cpp
     mem/alloc.h
     mem/mem.cpp
-    mem/mem.h
     mem/newdel.cpp
     mem/newdel.h
+    mem/wwmem.h
+    memsave.cpp
     menus.cpp
     menus.h
     message.cpp
@@ -186,7 +190,7 @@ set(BUSINESS_SRC
     status.cpp
     status.h
     stringsjb.cpp
-    stringsjb.h
+    structs.h
     talk.cpp
     talk.h
     tempcode.cpp
@@ -213,6 +217,8 @@ set(BUSINESS_SRC
     vqa32/unvqbuff.h
     vqa32/unvqrsd.asm
     vqa32/unvqrsd.h
+    vqa32/vqaplay.h
+    vqm32/iff.h
     vqm32/mcgabuf.asm
     vqm32/mcgabuf.h
     vqm32/mono.asm

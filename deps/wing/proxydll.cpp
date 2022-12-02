@@ -124,21 +124,41 @@ bool Load_Setup_Hooks()
 
     return true;
 }
-
+void enableDebugPrivileges()
+{
+    HANDLE hcurrent = GetCurrentProcess();
+    HANDLE hToken;
+    BOOL bret = OpenProcessToken(hcurrent, 40, &hToken);
+    LUID luid;
+    bret = LookupPrivilegeValue(NULL, "SeDebugPrivilege", &luid);
+    TOKEN_PRIVILEGES NewState, PreviousState;
+    DWORD ReturnLength;
+    NewState.PrivilegeCount = 1;
+    NewState.Privileges[0].Luid = luid;
+    NewState.Privileges[0].Attributes = 2;
+    AdjustTokenPrivileges(hToken, FALSE, &NewState, 28, &PreviousState, &ReturnLength);
+}
 /**
  * Our proxy dll entry point, we load the dll we are proxying as well as set up our injection payload on process attach.
  */
 BOOL WINAPI DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
+    //enableDebugPrivileges();
     switch (ul_reason_for_call) {
         case DLL_PROCESS_ATTACH:
             // Now we work out which binary we have and load the payload dll if we have it.
-            if (Load_Setup_Hooks()) {
-                if (StartHooks()) {
-                    Setup_Hooks();
-                    StopHooks();
-                }
-            }
+            //if (Load_Setup_Hooks()) {
+            //    MessageBoxA(nullptr, "loaded setup hooks", "Proxy", MB_ICONINFORMATION);
+            //    if (StartHooks()) {
+            //        MessageBoxA(nullptr, "called StartHooks", "Proxy", MB_ICONINFORMATION);
+            //        Setup_Hooks();
+            //        MessageBoxA(nullptr, "called Setup_Hooks", "Proxy", MB_ICONINFORMATION);
+            //        StopHooks();
+            //        MessageBoxA(nullptr, "called StopHooks", "Proxy", MB_ICONINFORMATION);
+            //    } else {
+            //        MessageBoxA(nullptr, "StartHooks failed", "Proxy", MB_ICONINFORMATION);
+            //    }
+            //}
             break;
 
         case DLL_PROCESS_DETACH:

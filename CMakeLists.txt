@@ -52,5 +52,8 @@ add_subdirectory(deps/wing)
 # Build the game exe.
 add_subdirectory(src)
 
+# Build the launcher
+add_subdirectory(launcher)
+
 feature_summary(WHAT ENABLED_FEATURES DESCRIPTION "Enabled features:")
 feature_summary(WHAT DISABLED_FEATURES DESCRIPTION "Disabled features:")
